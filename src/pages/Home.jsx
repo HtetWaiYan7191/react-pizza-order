@@ -61,8 +61,6 @@ export default function Home() {
           </form>
         )}
       </div>
-
-      <Link to="/menu">Menu</Link>
     </section>
   );
 }

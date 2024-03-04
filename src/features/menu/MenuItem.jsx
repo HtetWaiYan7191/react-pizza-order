@@ -13,7 +13,6 @@ import {
 import CartQuantiesUpdate from '../../ui/CartQuantiesUpdate';
 
 export default function MenuItem({ pizza }) {
-  console.log(pizza);
   const { id: pizzaId, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
@@ -22,7 +21,7 @@ export default function MenuItem({ pizza }) {
 
   const handleClick = () => {
     if (isInCart) {
-      dispatch(deleteCart(pizza.pizzaId));
+      dispatch(deleteCart(pizza.id));
     } else {
       dispatch(addToCart({ ...pizza, pizzaId: pizza.id, quantity: 1, totalPrice: unitPrice * 1 }));
     }

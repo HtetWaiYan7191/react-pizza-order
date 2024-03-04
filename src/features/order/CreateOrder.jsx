@@ -1,7 +1,7 @@
 import { Form, useNavigation, useActionData } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import { redirect } from "react-router-dom";
-import { getFirstName } from "../../redux/user/userSlice";
+import { getFirstName, makeOrder } from "../../redux/user/userSlice";
 import { useSelector } from "react-redux";
 import { clearCart, getCart } from "../../redux/cart/cartSlice";
 import store from '../../redux/store';
@@ -24,6 +24,7 @@ export async function action({ request }) {
 
   const newOrder = await createOrder(order);
   store.dispatch(clearCart());
+  store.dispatch(makeOrder(newOrder))
   return redirect(`/order/${newOrder.id}`);
 }
 

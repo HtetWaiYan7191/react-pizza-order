@@ -9,10 +9,12 @@ const cartSlice = createSlice({
   initialState,
   reducers: {
     addToCart: (state, action) => {
+        console.log(action.payload);
       state.cart.push(action.payload);
     },
 
     deleteCart: (state, action) => {
+        console.log(action.payload);
       state.cart = state.cart.filter((item) => item.id !== action.payload);
     },
 
@@ -48,6 +50,13 @@ export const getCurrentQuantity = (id) => (state) =>
 
 export function getCart(state) {
   return state.cart.cart;
+}
+
+export const getIngredients = (id) => (state) => {
+    console.log(state.cart.cart)
+   const test = state.cart.cart.find((item) => item.id === id)?.ingredients ;
+   console.log(test);
+   return test;
 }
 
 export const {
