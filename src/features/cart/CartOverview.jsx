@@ -6,6 +6,7 @@ export default function CartOverview() {
   const pizzaCount = useSelector(getTotalQuantity)
   const totalPrice = useSelector(getTotalPrice)
 
+  
   if(!pizzaCount) return null;
   return (
     <div className='fixed bottom-0 z-10 flex items-center justify-between w-full p-8 text-white/90 cart-overview-container bg-stone-800'>
