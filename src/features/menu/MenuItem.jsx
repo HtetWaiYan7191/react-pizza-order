@@ -13,17 +13,18 @@ import {
 import CartQuantiesUpdate from '../../ui/CartQuantiesUpdate';
 
 export default function MenuItem({ pizza }) {
-  const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
+  console.log(pizza);
+  const { id: pizzaId, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const cart = useSelector((state) => state.cart.cart);
   const dispatch = useDispatch();
-  const quantity = useSelector(getCurrentQuantity(id));
+  const quantity = useSelector(getCurrentQuantity(pizzaId));
   const isInCart = quantity > 0;
 
   const handleClick = () => {
     if (isInCart) {
-      dispatch(deleteCart(pizza.id));
+      dispatch(deleteCart(pizza.pizzaId));
     } else {
-      dispatch(addToCart({ ...pizza, quantity: 1, totalPrice: unitPrice * 1 }));
+      dispatch(addToCart({ ...pizza, pizzaId: pizza.id, quantity: 1, totalPrice: unitPrice * 1 }));
     }
   };
 
@@ -57,7 +58,7 @@ export default function MenuItem({ pizza }) {
       </div>
       <div className="mt-auto ml-auto btn-container">
         {isInCart && !soldOut && (
-         <CartQuantiesUpdate id={id}/>
+         <CartQuantiesUpdate id={pizzaId}/>
         )}
         {!soldOut && (
           <button

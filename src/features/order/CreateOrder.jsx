@@ -1,6 +1,10 @@
 import { Form, useNavigation, useActionData } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import { redirect } from "react-router-dom";
+import { getFirstName } from "../../redux/user/userSlice";
+import { useSelector } from "react-redux";
+import { clearCart, getCart } from "../../redux/cart/cartSlice";
+import store from '../../redux/store';
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -19,6 +23,7 @@ export async function action({ request }) {
   if (Object.keys(errors).length > 0) return errors;
 
   const newOrder = await createOrder(order);
+  store.dispatch(clearCart());
   return redirect(`/order/${newOrder.id}`);
 }
 
@@ -30,76 +35,88 @@ function isValidPhoneNumber(phoneNumber) {
   return phoneRegex.test(phoneNumber);
 }
 
-const fakeCart = [
-  {
-    pizzaId: 1,
-    name: "spinach and mushroom",
-    quantity: 1,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-  {
-    pizzaId: 2,
-    name: "spinach ",
-    quantity: 4,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
 
-  {
-    pizzaId: 2,
-    name: " mushroom",
-    quantity: 6,
-    unitPrice: 15,
-    totalPrice: 15,
-  },
-];
 
 function CreateOrder() {
   const navigation = useNavigation();
-  console.log(navigation.state);
   const isSubmitting = navigation.state === "submitting";
   const formErrors = useActionData();
-  console.log(formErrors);
+  const firstName = useSelector(getFirstName);
+  const cart = useSelector(getCart)
 
+  if(!cart) return (
+    <h2>No cart ! </h2>
+  )
   return (
-    <div className="order-container">
-      <h2>Jonas</h2>
+    <div className="flex flex-col items-center mt-8 order-container">
+      <div className="mx-auto md:w-[60%] w-full">
+        <h2 className="mb-8 text-4xl font-semibold">Hello {firstName} 🥳</h2>
 
-      <Form method="POST" className="order-new-form">
-        <h2 className="text-lg font-semibold">Ready to order ? Lets go !</h2>
-        <div className="">
-          <label htmlFor="customer" id="customer">
-            First Name
-          </label>
-          <input required className="border-2" type="text" name="customer" />
-        </div>
+        <Form method="POST" className="order-new-form">
+          <h2 className="mb-6 text-2xl font-semibold">
+            Ready to order? Let&apos; go !
+          </h2>
+          <div className="flex items-center gap-4 mb-4">
+            <label htmlFor="customer" id="customer" className="text-xl w-52">
+              First Name
+            </label>
+            <input
+              required
+              value={firstName}
+              className="px-3 py-2 border-2 rounded-full grow focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+              type="text"
+              name="customer"
+            />
+          </div>
 
-        <div className="">
-          <label htmlFor="phone" id="phone">
-            Phone Number
-          </label>
-          <input required className="border-2" type="tel" name="phone" />
-          {formErrors?.phone && <span>{formErrors.phone}</span>}
-        </div>
+          <div className="flex items-center gap-4 mb-4">
+            <label htmlFor="phone" id="phone" className="text-xl w-52">
+              Phone Number
+            </label>
+            <input
+              required
+              className="px-3 py-2 border-2 rounded-full grow focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+              type="tel"
+              name="phone"
+            />
+            {formErrors?.phone && <span>{formErrors.phone}</span>}
+          </div>
 
-        <div className="">
-          <label htmlFor="address" id="address">
-            Address
-          </label>
-          <input required className="border-2" type="text" name="address" />
-        </div>
+          <div className="flex items-center gap-4 mb-4 ">
+            <label htmlFor="address" id="address" className="text-xl w-52">
+              Address
+            </label>
+            <input
+              required
+              className="px-3 py-2 border-2 rounded-full grow focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+              type="text"
+              name="address"
+            />
+          </div>
 
-        <input type="checkbox" name="priority" id="priority" />
-        <label htmlFor="priority">Want to give your order priority ?</label>
+          <div className="flex items-center ">
+            <input
+              type="checkbox"
+              name="priority"
+              id="priority"
+              className="inline-block w-6 h-6 me-4"
+            />
+            <label htmlFor="priority" className="text-xl">
+              Want to give your order priority ?
+            </label>
+          </div>
 
-        <div className="btn-container">
-          <input type="hidden" name="cart" value={JSON.stringify(fakeCart)} />
-          <button disabled={isSubmitting} className="px-3 py-1 border">
-            {isSubmitting ? "Placing Order" : "Order Now"}
-          </button>
-        </div>
-      </Form>
+          <div className="btn-container">
+            <input type="hidden" name="cart" value={JSON.stringify(cart)} />
+            <button
+              disabled={isSubmitting}
+              className="px-4 py-2 mt-6 text-xl bg-yellow-500 border rounded-full"
+            >
+              {isSubmitting ? "Placing Order" : "Order Now For X dollars"}
+            </button>
+          </div>
+        </Form>
+      </div>
     </div>
   );
 }

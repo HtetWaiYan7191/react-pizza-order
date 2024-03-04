@@ -4,10 +4,12 @@ import { useSelector } from "react-redux";
 import BackToMenu from "../../ui/BackToMenu";
 import {useDispatch} from 'react-redux';
 import CartQuantiesUpdate from "../../ui/CartQuantiesUpdate";
+import {useNavigate} from 'react-router-dom'
+
 export default function Cart() {
   const cart = useSelector(getCart);
   const dispatch = useDispatch();
-
+  const navigate = useNavigate();
   const handleDelete = (id) => {
     dispatch(deleteCart(id))
   }
@@ -16,8 +18,8 @@ export default function Cart() {
     dispatch(clearCart())
   }
   return (
-    <>
-      <div className="mt-8 back-to-menu-container ps-6">
+    <div className="w-[80%] mx-auto">
+      <div className="mt-8 back-to-menu-container ps-6 ">
         <BackToMenu />
       </div>
       <div className="px-6 mt-4 cart-list-container">
@@ -45,7 +47,7 @@ export default function Cart() {
               ))}
             </ul>
             <div className="mt-6 btn-container *:me-6">
-              <button className="px-4 py-2 font-semibold tracking-widest bg-yellow-500 rounded-full ">
+              <button onClick={() => navigate('/order/new')} className="px-4 py-2 font-semibold tracking-widest bg-yellow-500 rounded-full ">
                 ORDER PIZZAS
               </button>
               <button onClick={handleClearCart} className="px-4 py-2 font-semibold tracking-widest bg-yellow-500 rounded-full ">
@@ -57,7 +59,7 @@ export default function Cart() {
           <h2>Your cart is still empty. Start adding some pizzas :)</h2>
         )}
       </div>
-    </>
+    </div>
   );
 }
 
