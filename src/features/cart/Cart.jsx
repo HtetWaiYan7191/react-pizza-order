@@ -1,8 +1,9 @@
+/* eslint-disable react/prop-types */
 import { clearCart, deleteCart, getCart } from "../../redux/cart/cartSlice";
 import { useSelector } from "react-redux";
 import BackToMenu from "../../ui/BackToMenu";
 import {useDispatch} from 'react-redux';
-
+import CartQuantiesUpdate from "../../ui/CartQuantiesUpdate";
 export default function Cart() {
   const cart = useSelector(getCart);
   const dispatch = useDispatch();
@@ -27,13 +28,15 @@ export default function Cart() {
               {cart?.map((item) => (
                 <li
                   key={item.id}
-                  className="flex items-center justify-between pb-4 border-b-2 gap-x-6"
+                  className="flex items-center justify-between py-4 border-b-2 gap-x-6"
                 >
                   <span>
                     {item.quantity}x {item.name}
                   </span>
                   <span>
-                    ${item.totalPrice.toFixed(2)}
+                    <span className="me-4">${item.totalPrice.toFixed(2)}</span>
+                    <CartQuantiesUpdate id={item.id}/>
+
                     <button onClick={() => handleDelete(item.id)} className="px-4 py-2 tracking-widest bg-yellow-500 rounded-full ms-6">
                       DELETE
                     </button>
@@ -57,3 +60,6 @@ export default function Cart() {
     </>
   );
 }
+
+/* eslint-enable react/prop-types */
+

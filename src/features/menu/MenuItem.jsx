@@ -10,6 +10,7 @@ import {
   decreaseQuantity,
   getCurrentQuantity,
 } from "../../redux/cart/cartSlice";
+import CartQuantiesUpdate from '../../ui/CartQuantiesUpdate';
 
 export default function MenuItem({ pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
@@ -56,21 +57,7 @@ export default function MenuItem({ pizza }) {
       </div>
       <div className="mt-auto ml-auto btn-container">
         {isInCart && !soldOut && (
-          <>
-            <button
-              onClick={() => dispatch(decreaseQuantity(id))}
-              className="w-8 h-8 bg-yellow-500 rounded-full me-3"
-            >
-              -
-            </button>
-            <span className="me-3">{quantity}</span>
-            <button
-              onClick={() => dispatch(increaseQuantity(id))}
-              className="w-8 h-8 bg-yellow-500 rounded-full me-3"
-            >
-              +
-            </button>
-          </>
+         <CartQuantiesUpdate id={id}/>
         )}
         {!soldOut && (
           <button
