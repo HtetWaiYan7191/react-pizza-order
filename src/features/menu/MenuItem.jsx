@@ -14,18 +14,16 @@ import {
 export default function MenuItem({ pizza }) {
   const { id, name, unitPrice, ingredients, soldOut, imageUrl } = pizza;
   const cart = useSelector((state) => state.cart.cart);
-  const [addCart, setAddCart] = useState(false);
   const dispatch = useDispatch();
-  const quantity = getCurrentQuantity(id);
-  console.log(quantity);
+  const quantity = useSelector(getCurrentQuantity(id));
+  const isInCart = quantity > 0;
 
   const handleClick = () => {
-    if (addCart) {
+    if (isInCart) {
       dispatch(deleteCart(pizza.id));
     } else {
       dispatch(addToCart({ ...pizza, quantity: 1, totalPrice: unitPrice * 1 }));
     }
-    setAddCart((prev) => !prev);
   };
 
   return (
@@ -57,11 +55,21 @@ export default function MenuItem({ pizza }) {
         </div>
       </div>
       <div className="mt-auto ml-auto btn-container">
-        {cart.length > 0 && !soldOut && (
+        {isInCart && !soldOut && (
           <>
-            <button className="w-8 h-8 bg-yellow-500 rounded-full me-3">-</button>
+            <button
+              onClick={() => dispatch(decreaseQuantity(id))}
+              className="w-8 h-8 bg-yellow-500 rounded-full me-3"
+            >
+              -
+            </button>
             <span className="me-3">{quantity}</span>
-            <button className="w-8 h-8 bg-yellow-500 rounded-full me-3">+</button>
+            <button
+              onClick={() => dispatch(increaseQuantity(id))}
+              className="w-8 h-8 bg-yellow-500 rounded-full me-3"
+            >
+              +
+            </button>
           </>
         )}
         {!soldOut && (
@@ -69,7 +77,7 @@ export default function MenuItem({ pizza }) {
             onClick={handleClick}
             className="px-4 py-2 tracking-widest bg-yellow-500 rounded-full ms-6"
           >
-            {addCart ? "DELETE" : "ADD TO CART"}
+            {isInCart ? "DELETE" : "ADD TO CART"}
           </button>
         )}
       </div>
