@@ -8,7 +8,7 @@ export async function loader() {
 function Menu() {
   const menu = useLoaderData();
   return (
-    <ul className="w-[60%] mx-auto">
+    <ul className="w-[70%] mx-auto">
       {menu.map((pizza) => (
         <MenuItem pizza={pizza} key={pizza.id} />
       ))}
