@@ -1,10 +1,14 @@
 import { Form, useNavigation, useActionData } from "react-router-dom";
 import { createOrder } from "../../services/apiRestaurant";
 import { redirect } from "react-router-dom";
-import { fetchAddress, getFirstName, makeOrder } from "../../redux/user/userSlice";
+import {
+  fetchAddress,
+  getFirstName,
+  makeOrder,
+} from "../../redux/user/userSlice";
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart, getCart } from "../../redux/cart/cartSlice";
-import store from '../../redux/store';
+import store from "../../redux/store";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -24,7 +28,7 @@ export async function action({ request }) {
 
   const newOrder = await createOrder(order);
   store.dispatch(clearCart());
-  store.dispatch(makeOrder(newOrder))
+  store.dispatch(makeOrder(newOrder));
   return redirect(`/order/${newOrder.id}`);
 }
 
@@ -36,27 +40,21 @@ function isValidPhoneNumber(phoneNumber) {
   return phoneRegex.test(phoneNumber);
 }
 
-
-
 function CreateOrder() {
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const formErrors = useActionData();
   const firstName = useSelector(getFirstName);
-  const address = useSelector(state => state.user.address);
-  const cart = useSelector(getCart)
+  const address = useSelector((state) => state.user.address);
+  const cart = useSelector(getCart);
   const dispatch = useDispatch();
 
-  if(!cart) return (
-    <h2>No cart ! </h2>
-  )
+  if (!cart) return <h2>No cart ! </h2>;
   return (
     <div className="flex flex-col items-center mt-8 order-container">
-      <div className="mx-auto md:w-[60%] w-full">
+      <div className="mx-auto md:w-[70%] w-full">
         <h2 className="mb-8 text-4xl font-semibold">Hello {firstName} 🥳</h2>
-        <button className="px-3 py-1 bg-yellow-500" onClick={() => dispatch(fetchAddress())}>
-          testing location
-        </button>
+
         <Form method="POST" className="order-new-form">
           <h2 className="mb-6 text-2xl font-semibold">
             Ready to order? Let&apos; go !
@@ -87,17 +85,23 @@ function CreateOrder() {
             {formErrors?.phone && <span>{formErrors.phone}</span>}
           </div>
 
-          <div className="flex items-center gap-4 mb-4 ">
+          <div className="relative flex items-center gap-4 mb-4 ">
             <label htmlFor="address" id="address" className="text-xl w-52">
               Address
             </label>
             <input
               required
-              className="px-3 py-2 border-2 rounded-full grow focus:ring-2 focus:ring-yellow-500 focus:outline-none"
+              className="relative px-3 py-2 border-2 rounded-full grow focus:ring-2 focus:ring-yellow-500 focus:outline-none"
               type="text"
               name="address"
-              value={address ?? ''}
+              value={address ?? ""}
             />
+            <button
+              className="absolute px-3 py-1 text-sm bg-yellow-500 rounded-full right-5"
+              onClick={() => dispatch(fetchAddress())}
+            >
+              use current location
+            </button>
           </div>
 
           <div className="flex items-center ">
