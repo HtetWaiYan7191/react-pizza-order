@@ -1,9 +1,10 @@
 /* eslint-disable no-unused-vars */
 
 import { getOrder } from "../../services/apiRestaurant";
-import { useLoaderData } from "react-router-dom";
+import { useFetcher, useLoaderData } from "react-router-dom";
 import { useSelector } from "react-redux";
 import { formatDate } from "../../utils/helper";
+import { useEffect } from "react";
 
 export async function orderLoader({ params }) {
   const order = await getOrder(params.orderId);
@@ -11,6 +12,15 @@ export async function orderLoader({ params }) {
 }
 export default function OrderDetail() {
   const order = useLoaderData();
+  const fetcher = useFetcher();
+  console.log(fetcher.data);
+  useEffect(() => {
+    if(!fetcher.data && fetcher.state === 'idle') {
+      fetcher.load('/menu')
+    }
+  }, [fetcher])
+
+  
   const {
     customer,
     status,
@@ -58,8 +68,8 @@ export default function OrderDetail() {
                 </span>
                 <span>${item.unitPrice.toFixed(2)}</span>
               </div>
-              <span className="text-stone-400">
-                {item.ingredients?.join(",")}
+              <span className="italic text-stone-400">
+                {fetcher?.data?.find((el) => el.id === item.pizzaId)?.ingredients.join(', ')}
               </span>
             </li>
           ))}

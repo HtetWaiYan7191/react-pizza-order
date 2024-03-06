@@ -9,6 +9,7 @@ import {
 import { useSelector, useDispatch } from "react-redux";
 import { clearCart, getCart } from "../../redux/cart/cartSlice";
 import store from "../../redux/store";
+import { useState } from "react";
 
 export async function action({ request }) {
   const formData = await request.formData();
@@ -41,6 +42,7 @@ function isValidPhoneNumber(phoneNumber) {
 }
 
 function CreateOrder() {
+  const [customerName, setCustomerName] = useState('');
   const navigation = useNavigation();
   const isSubmitting = navigation.state === "submitting";
   const formErrors = useActionData();
@@ -65,10 +67,11 @@ function CreateOrder() {
             </label>
             <input
               required
-              value={firstName}
+              value={firstName ?? customerName}
               className="px-3 py-2 border-2 rounded-full grow focus:ring-2 focus:ring-yellow-500 focus:outline-none"
               type="text"
               name="customer"
+              onChange={(e) => setCustomerName(e.target.value)}
             />
           </div>
 
